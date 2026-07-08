@@ -1,17 +1,51 @@
 ---
+import Base from '../layouts/Base.astro';
+import CategoryTile from '../components/CategoryTile.astro';
+import EventCard from '../components/EventCard.astro';
+import CrisisBanner from '../components/CrisisBanner.astro';
+import { CATEGORY_META } from '../lib/categoryMeta';
+import { getAllEvents } from '../data/index';
 
+const events = (await getAllEvents())
+  .filter((e) => new Date(e.start) >= new Date(Date.now() - 864e5))
+  .sort((a, b) => +new Date(a.start) - +new Date(b.start))
+  .slice(0, 4);
 ---
+<Base title="Free health resources across NYC">
+  <section style="background:linear-gradient(180deg,var(--teal),var(--teal-dark));color:#fff">
+    <div class="container" style="padding:40px 1rem">
+      <h1 style="font-size:2rem;line-height:1.12;max-width:20ch;margin:0">
+        Free health resources across NYC — all in one place.
+      </h1>
+      <p style="opacity:.9;max-width:48ch">Clinics, counseling, food, vaccines, support &amp; events. No cost. No judgment.</p>
+      <form action="/resources" method="get" style="display:flex;gap:8px;max-width:520px">
+        <label for="q" class="visually-hidden">Search resources</label>
+        <input id="q" name="q" placeholder="Search “free vaccines in the Bronx”…"
+          style="flex:1;padding:13px;border:none;border-radius:8px" />
+        <button class="btn" type="submit">Search</button>
+      </form>
+      <p style="font-size:.8rem;opacity:.85;margin-top:10px">
+        <a href="/resources?near=1" style="color:#fff">📍 Use my location to find what’s nearest</a>
+      </p>
+    </div>
+  </section>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <section class="container" style="padding:24px 1rem">
+    <h2>Browse by need</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+      {CATEGORY_META.map((c) => <CategoryTile label={c.label} emoji={c.emoji} slug={c.slug} />)}
+    </div>
+  </section>
+
+  <section class="container" style="padding:8px 1rem 24px">
+    <h2>This week’s free events</h2>
+    {events.length === 0 ? <p>No upcoming events listed yet — check back soon.</p> : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+        {events.map((e) => <EventCard e={e} />)}
+      </div>
+    )}
+    <p style="margin-top:12px"><a class="btn btn-teal" href="/events">See all events →</a></p>
+  </section>
+
+  <CrisisBanner />
+</Base>
