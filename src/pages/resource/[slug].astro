@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getAllResources } from '../../data/index';
+
+export async function getStaticPaths() {
+  const resources = await getAllResources();
+  return resources.map((r) => ({ params: { slug: r.id }, props: { r } }));
+}
+const { r } = Astro.props;
+---
+<Base title={r.title} description={r.description}>
+  <div class="container" style="padding:24px 1rem;max-width:760px">
+    <p><a href="/resources">← Back to resources</a></p>
+    <span class="tag">{r.categories.join(' · ')}</span>
+    <h1>{r.title}</h1>
+    {r.organization && <p style="color:var(--ink-soft)">{r.organization}</p>}
+    <p>{r.description}</p>
+    <dl style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.92rem">
+      {r.address && (<><dt><strong>Address</strong></dt><dd>{r.address}, {r.borough} {r.zip ?? ''}</dd></>)}
+      {r.hours && (<><dt><strong>Hours</strong></dt><dd>{r.hours}</dd></>)}
+      {r.phone && (<><dt><strong>Phone</strong></dt><dd><a href={`tel:${r.phone}`}>{r.phone}</a></dd></>)}
+      {r.website && (<><dt><strong>Website</strong></dt><dd><a href={r.website}>{r.website}</a></dd></>)}
+      {r.costNote && (<><dt><strong>Cost</strong></dt><dd>{r.costNote}</dd></>)}
+      {r.howToAccess && (<><dt><strong>Access</strong></dt><dd>{r.howToAccess}</dd></>)}
+      {r.whoItsFor.length > 0 && (<><dt><strong>For</strong></dt><dd>{r.whoItsFor.join(', ')}</dd></>)}
+      {r.languagesOffered.length > 0 && (<><dt><strong>Languages</strong></dt><dd>{r.languagesOffered.join(', ')}</dd></>)}
+    </dl>
+    <p style="font-size:.75rem;color:var(--ink-soft);margin-top:1rem">
+      Source: {r.source} · Last updated {r.lastUpdated}
+    </p>
+  </div>
+</Base>
