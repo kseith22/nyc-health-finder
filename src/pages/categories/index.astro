@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import CategoryTile from '../../components/CategoryTile.astro';
+import { CATEGORY_META } from '../../lib/categoryMeta';
+---
+<Base title="Browse by category">
+  <div class="container" style="padding:24px 1rem">
+    <h1>Browse by category</h1>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+      {CATEGORY_META.map((c) => <CategoryTile label={c.label} emoji={c.emoji} slug={c.slug} />)}
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import ResourceCard from '../../components/ResourceCard.astro';
+import EventCard from '../../components/EventCard.astro';
+import { CATEGORY_META, categoryBySlug } from '../../lib/categoryMeta';
+import { getAllResources, getAllEvents } from '../../data/index';
+
+export async function getStaticPaths() {
+  return CATEGORY_META.map((c) => ({ params: { slug: c.slug } }));
+}
+const { slug } = Astro.params;
+const meta = categoryBySlug(slug!)!;
+const resources = (await getAllResources()).filter((r) => r.categories.includes(meta.label as any));
+const events = (await getAllEvents()).filter((e) => e.categories.includes(meta.label as any));
+---
+<Base title={meta.label} description={`Free ${meta.label} resources and events in NYC.`}>
+  <div class="container" style="padding:24px 1rem">
+    <p><a href="/categories">← All categories</a></p>
+    <h1>{meta.emoji} {meta.label}</h1>
+    <p><a class="btn btn-teal" href={`/resources?category=${encodeURIComponent(meta.label)}`}>
+      Search &amp; filter these on the map →</a></p>
+
+    <h2>Resources</h2>
+    {resources.length === 0 ? <p>None listed yet — check back soon.</p> : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+        {resources.map((r) => <ResourceCard r={r} />)}
+      </div>
+    )}
+
+    {events.length > 0 && (
+      <>
+        <h2>Upcoming events</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+          {events.map((e) => <EventCard e={e} />)}
+        </div>
+      </>
+    )}
+  </div>
+</Base>
