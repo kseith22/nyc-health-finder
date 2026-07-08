@@ -1,0 +1,15 @@
+---
+import type { HealthEvent } from '../lib/types';
+interface Props { e: HealthEvent; }
+const { e } = Astro.props;
+const when = new Date(e.start).toLocaleString('en-US', {
+  weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+});
+---
+<a href={`/event/${e.id}`} class="card" style="display:block;text-decoration:none;color:inherit">
+  <div style="font-size:.64rem;font-weight:800;color:var(--coral);text-transform:uppercase">{when}</div>
+  <div style="font-weight:800;margin:3px 0">{e.title}</div>
+  <div style="font-size:.8rem;color:var(--ink-soft)">
+    {e.online ? 'Online' : (e.address ?? e.borough)}{e.registrationRequired ? ' · Registration required' : ''}
+  </div>
+</a>

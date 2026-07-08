@@ -1,0 +1,20 @@
+---
+import type { Resource } from '../lib/types';
+interface Props { r: Resource; }
+const { r } = Astro.props;
+---
+<a href={`/resource/${r.id}`} class="card" style="display:block;text-decoration:none;color:inherit">
+  <div style="font-size:.66rem;font-weight:800;color:var(--coral);text-transform:uppercase">
+    {r.costNote ?? 'Free'} · {r.categories[0]}
+  </div>
+  <div style="font-weight:800;margin:4px 0">{r.title}</div>
+  <div style="font-size:.82rem;color:var(--ink-soft)">
+    {r.borough}{r.neighborhood ? ` · ${r.neighborhood}` : ''}
+    {r.howToAccess ? ` · ${r.howToAccess}` : ''}
+  </div>
+  {r.whoItsFor.length > 0 && (
+    <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">
+      {r.whoItsFor.slice(0, 4).map((w) => <span class="tag">{w}</span>)}
+    </div>
+  )}
+</a>
