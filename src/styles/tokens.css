@@ -1,0 +1,16 @@
+:root {
+  --teal: #0f766e;
+  --teal-dark: #0d6b63;
+  --coral: #ff6f5e;
+  --crisis: #e4342a;
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --border: #e7e2d8;
+  --ink: #12312e;
+  --ink-soft: #5c6b68;
+  --radius: 13px;
+  --radius-sm: 8px;
+  --space: 1rem;
+  --maxw: 1080px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

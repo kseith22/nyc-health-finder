@@ -1,0 +1,44 @@
+---
+const links = [
+  { href: '/resources', label: 'Resources' },
+  { href: '/events', label: 'Events' },
+  { href: '/categories', label: 'Categories' },
+  { href: '/about', label: 'About' },
+];
+---
+<header style="background:var(--teal);color:#fff">
+  <nav class="container" style="display:flex;align-items:center;gap:16px;padding:12px 1rem"
+       aria-label="Primary">
+    <a href="/" style="color:#fff;text-decoration:none;font-weight:800;font-size:1.1rem;letter-spacing:-.02em">
+      NYC Health Finder<span style="color:var(--coral)">.</span>
+    </a>
+    <button id="navToggle" aria-expanded="false" aria-controls="navLinks"
+      style="margin-left:auto;background:none;border:none;color:#fff;font-size:1.5rem;display:none;cursor:pointer">
+      <span class="visually-hidden">Menu</span>☰
+    </button>
+    <div id="navLinks" style="margin-left:auto;display:flex;gap:16px;align-items:center">
+      {links.map((l) => (
+        <a href={l.href} style="color:#fff;text-decoration:none;font-weight:600;font-size:.9rem">{l.label}</a>
+      ))}
+      <a href="/about#crisis" style="background:var(--crisis);color:#fff;font-weight:800;
+        padding:8px 12px;border-radius:8px;text-decoration:none">🆘 Get Help Now</a>
+    </div>
+  </nav>
+</header>
+<style>
+  @media (max-width: 720px) {
+    #navToggle { display: block !important; }
+    #navLinks { display: none !important; position: absolute; left: 0; right: 0;
+      flex-direction: column; align-items: flex-start; background: var(--teal-dark);
+      padding: 12px 1rem; gap: 12px; z-index: 20; }
+    #navLinks.open { display: flex !important; }
+  }
+</style>
+<script>
+  const t = document.getElementById('navToggle');
+  const n = document.getElementById('navLinks');
+  t?.addEventListener('click', () => {
+    const open = n?.classList.toggle('open');
+    t.setAttribute('aria-expanded', String(!!open));
+  });
+</script>
