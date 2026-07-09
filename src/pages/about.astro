@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import CrisisBanner from '../components/CrisisBanner.astro';
+---
+<Base title="About">
+  <div class="container" style="padding:24px 1rem;max-width:760px">
+    <h1>About NYC Health Finder</h1>
+    <p>NYC Health Finder is a free, independent guide to public health resources and events
+      across New York City. Our goal is simple: help anyone find free care, support, and
+      services — with no cost and no judgment.</p>
+
+    <h2 id="crisis">Get help now</h2>
+    <p>If you are in crisis, call or text <a href="tel:988"><strong>988</strong></a>
+      (Suicide &amp; Crisis Lifeline), reach NYC Well at
+      <a href="tel:1-888-692-9355">1-888-692-9355</a>, or call <a href="tel:911">911</a>
+      in an emergency.</p>
+
+    <h2>Independence</h2>
+    <p>This site is an independent community resource. It is <strong>not affiliated with or
+      endorsed by the City of New York</strong>. Always confirm details directly with the provider.</p>
+
+    <h2>Where our data comes from</h2>
+    <ul>
+      <li>Curated listings reviewed by our team</li>
+      <li><a href="https://opendata.cityofnewyork.us/">NYC Open Data</a> (DOHMH datasets)</li>
+      <li><a href="https://www.nycgovparks.org/events">NYC Parks</a> free fitness &amp; wellness events</li>
+    </ul>
+  </div>
+  <CrisisBanner />
+</Base>
