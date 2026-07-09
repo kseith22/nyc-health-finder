@@ -1,5 +1,6 @@
 import type { Resource, Category } from '../types';
 import { toBorough, slugify } from '../normalize';
+import { USER_AGENT } from '../userAgent';
 
 export interface SocrataSource {
   dataset: string;                 // Socrata dataset id, e.g. 'abcd-1234'
@@ -35,7 +36,10 @@ export async function fetchNycOpenData(
   for (const src of sources) {
     const url = `${BASE}/${src.dataset}.json?$limit=${limit}`;
     const res = await doFetch(url, {
-      headers: opts.appToken ? { 'X-App-Token': opts.appToken } : {},
+      headers: {
+        'User-Agent': USER_AGENT,
+        ...(opts.appToken ? { 'X-App-Token': opts.appToken } : {}),
+      },
       signal: AbortSignal.timeout(15000),
     });
     if (!res.ok) throw new Error(`Socrata ${src.dataset} HTTP ${res.status}`);

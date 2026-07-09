@@ -1,5 +1,6 @@
 import type { Resource, Category } from '../types';
 import { slugify, boroughFromZip } from '../normalize';
+import { USER_AGENT } from '../userAgent';
 
 // SAMHSA findtreatment.gov locator (behavioral health: mental health + substance use).
 // Public JSON endpoint, no key enforced on the wire. Distance search around downtown NYC.
@@ -60,7 +61,10 @@ export async function fetchSamhsaTreatment(opts: SamhsaOpts = {}): Promise<Resou
   let page = 1;
   let totalPages = 1;
   do {
-    const res = await doFetch(samhsaUrl(page), { signal: AbortSignal.timeout(15000) });
+    const res = await doFetch(samhsaUrl(page), {
+      signal: AbortSignal.timeout(15000),
+      headers: { 'User-Agent': USER_AGENT },
+    });
     if (!res.ok) throw new Error(`SAMHSA HTTP ${res.status}`);
     const json = (await res.json()) as { totalPages?: number; rows?: SamhsaRow[] };
     totalPages = json.totalPages ?? 1;

@@ -1,5 +1,6 @@
 import type { Resource, Borough } from '../types';
 import { slugify } from '../normalize';
+import { USER_AGENT } from '../userAgent';
 
 // HRSA Health Center Service Delivery Sites (layer 18), filtered to the five NYC counties.
 // Public ArcGIS REST endpoint, no auth, flat WGS84 coordinates (outSR=4326).
@@ -44,7 +45,10 @@ function str(v: unknown): string | undefined {
 
 export async function fetchHrsaHealthCenters(opts: HrsaOpts = {}): Promise<Resource[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const res = await doFetch(hrsaUrl(), { signal: AbortSignal.timeout(15000) });
+  const res = await doFetch(hrsaUrl(), {
+    signal: AbortSignal.timeout(15000),
+    headers: { 'User-Agent': USER_AGENT },
+  });
   if (!res.ok) throw new Error(`HRSA HTTP ${res.status}`);
   const json = (await res.json()) as { features?: ArcgisFeature[] };
   const features = json.features ?? [];

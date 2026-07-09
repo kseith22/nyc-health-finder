@@ -1,5 +1,6 @@
 import type { HealthEvent } from '../types';
 import { slugify } from '../normalize';
+import { USER_AGENT } from '../userAgent';
 
 // NYC Parks upcoming events. Sourced via NYC Open Data (Socrata dataset w3wp-dpdi,
 // "NYC Parks Public Events – Upcoming 14 Days") rather than the nycgovparks.org RSS
@@ -26,7 +27,10 @@ function toIso(startdate?: string, starttime?: string): string | undefined {
 
 export async function fetchNycParksEvents(opts: ParksOpts = {}): Promise<HealthEvent[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const res = await doFetch(opts.feedUrl ?? FEED, { signal: AbortSignal.timeout(20000) });
+  const res = await doFetch(opts.feedUrl ?? FEED, {
+    signal: AbortSignal.timeout(20000),
+    headers: { 'User-Agent': USER_AGENT },
+  });
   if (!res.ok) throw new Error(`NYC Parks feed HTTP ${res.status}`);
   const rows: Record<string, any>[] = await res.json();
 
