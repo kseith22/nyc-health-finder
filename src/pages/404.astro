@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import CrisisBanner from '../components/CrisisBanner.astro';
+---
+<Base title="Page not found" description="This page could not be found on NYC Health Finder.">
+  <div class="container" style="padding:56px 1rem;max-width:640px;text-align:center">
+    <div style="font-size:3rem">🔍</div>
+    <h1>We couldn't find that page</h1>
+    <p style="color:var(--ink-soft);font-size:1.05rem">
+      The link may be broken or the resource may have moved. Let's get you back on track.
+    </p>
+    <form action="/resources" method="get" style="display:flex;gap:8px;max-width:440px;margin:20px auto 0">
+      <label for="q" class="visually-hidden">Search resources</label>
+      <input id="q" name="q" placeholder="Search free health resources…"
+        style="flex:1;padding:12px;border:2px solid var(--border);border-radius:8px" />
+      <button class="btn" type="submit">Search</button>
+    </form>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+      <a class="btn btn-teal" href="/">Home</a>
+      <a class="btn btn-teal" href="/resources">Browse resources</a>
+      <a class="btn btn-teal" href="/categories">Categories</a>
+    </div>
+  </div>
+  <CrisisBanner />
+</Base>
