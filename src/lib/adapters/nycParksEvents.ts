@@ -2,6 +2,9 @@ import type { HealthEvent } from '../types';
 import { slugify } from '../normalize';
 
 const FEED = 'https://www.nycgovparks.org/xml/events_300_rss.json';
+// Some government feeds reject requests without a descriptive User-Agent
+// (works from a laptop but 403/blocks from CI/cloud IPs). Send a polite one.
+const UA = 'NYC-Health-Finder/1.0 (+https://nyc-health-finder.pages.dev)';
 const HEALTH_KEYWORDS =
   /(yoga|fitness|walk|run|wellness|health|nutrition|mindful|zumba|exercise|tai chi|meditation|shape up)/i;
 
@@ -15,7 +18,10 @@ function parseCoords(s?: string) {
 
 export async function fetchNycParksEvents(opts: ParksOpts = {}): Promise<HealthEvent[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const res = await doFetch(opts.feedUrl ?? FEED, { signal: AbortSignal.timeout(15000) });
+  const res = await doFetch(opts.feedUrl ?? FEED, {
+    signal: AbortSignal.timeout(15000),
+    headers: { 'User-Agent': UA, Accept: 'application/json' },
+  });
   if (!res.ok) throw new Error(`NYC Parks feed HTTP ${res.status}`);
   const rows: Record<string, any>[] = await res.json();
 
