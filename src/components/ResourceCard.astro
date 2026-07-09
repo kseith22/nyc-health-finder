@@ -4,7 +4,7 @@ interface Props { r: Resource; }
 const { r } = Astro.props;
 ---
 <a href={`/resource/${r.id}`} class="card" style="display:block;text-decoration:none;color:inherit">
-  <div style="font-size:.66rem;font-weight:800;color:var(--coral);text-transform:uppercase">
+  <div style="font-size:.66rem;font-weight:800;color:var(--coral-ink);text-transform:uppercase">
     {r.costNote ?? 'Free'} · {r.categories[0]}
   </div>
   <div style="font-weight:800;margin:4px 0">{r.title}</div>
