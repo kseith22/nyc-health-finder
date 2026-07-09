@@ -2,6 +2,8 @@ import type { Entry, Resource, HealthEvent } from './types';
 import { dedupeKey } from './normalize';
 import { fetchNycOpenData, type SocrataSource } from './adapters/nycOpenData';
 import { fetchNycParksEvents } from './adapters/nycParksEvents';
+import { fetchHrsaHealthCenters } from './adapters/hrsaHealthCenters';
+import { fetchSamhsaTreatment } from './adapters/samhsaTreatment';
 import { readCache, writeCache } from './cache';
 
 /** Merge many entry lists; earlier lists win on dedupe collisions (curated first). */
@@ -39,8 +41,10 @@ export async function ingestAll(input: IngestInput): Promise<{ resources: Resour
   const openData = await safeFeed('nyc-open-data', () =>
     fetchNycOpenData(input.socrataSources, { appToken: input.appToken }));
   const parks = await safeFeed('nyc-parks', () => fetchNycParksEvents());
+  const hrsa = await safeFeed('hrsa', () => fetchHrsaHealthCenters());
+  const samhsa = await safeFeed('samhsa', () => fetchSamhsaTreatment());
 
-  const resources = mergeEntries([input.curatedResources, openData]) as Resource[];
+  const resources = mergeEntries([input.curatedResources, openData, hrsa, samhsa]) as Resource[];
   const events = mergeEntries([input.curatedEvents, parks]) as HealthEvent[];
   return { resources, events };
 }

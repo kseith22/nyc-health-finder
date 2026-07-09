@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { slugify, dedupeKey, toBorough } from '../../src/lib/normalize';
+import { slugify, dedupeKey, toBorough, boroughFromZip } from '../../src/lib/normalize';
 
 describe('normalize', () => {
   it('slugifies titles', () => {
@@ -18,5 +18,14 @@ describe('normalize', () => {
     expect(toBorough('MN')).toBe('Manhattan');
     expect(toBorough('brooklyn')).toBe('Brooklyn');
     expect(toBorough('')).toBe('Citywide/Online');
+  });
+  it('derives NYC borough from zip code', () => {
+    expect(boroughFromZip('10013')).toBe('Manhattan');
+    expect(boroughFromZip('10301')).toBe('Staten Island');
+    expect(boroughFromZip('10451')).toBe('Bronx');
+    expect(boroughFromZip('11201')).toBe('Brooklyn');
+    expect(boroughFromZip('11375')).toBe('Queens');
+    expect(boroughFromZip('07030')).toBe('Citywide/Online'); // non-NYC
+    expect(boroughFromZip(undefined)).toBe('Citywide/Online');
   });
 });

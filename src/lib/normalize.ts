@@ -27,3 +27,15 @@ export function toBorough(raw: string | undefined | null): Borough {
   if (!raw) return 'Citywide/Online';
   return BOROUGH_MAP[raw.trim().toLowerCase()] ?? 'Citywide/Online';
 }
+
+/** Derive an NYC borough from a ZIP code by prefix. Non-NYC ZIPs → Citywide/Online. */
+export function boroughFromZip(zip: string | undefined | null): Borough {
+  if (!zip) return 'Citywide/Online';
+  const p = String(zip).trim().slice(0, 3);
+  if (p === '100' || p === '101' || p === '102') return 'Manhattan';
+  if (p === '103') return 'Staten Island';
+  if (p === '104') return 'Bronx';
+  if (p === '112') return 'Brooklyn';
+  if (p === '110' || p === '111' || p === '113' || p === '114' || p === '116') return 'Queens';
+  return 'Citywide/Online';
+}
