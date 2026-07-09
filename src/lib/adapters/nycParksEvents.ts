@@ -1,12 +1,12 @@
 import type { HealthEvent } from '../types';
 import { slugify } from '../normalize';
 
-const FEED = 'https://www.nycgovparks.org/xml/events_300_rss.json';
-// Some government feeds reject requests without a descriptive User-Agent
-// (works from a laptop but 403/blocks from CI/cloud IPs). Send a polite one.
-const UA = 'NYC-Health-Finder/1.0 (+https://nyc-health-finder.pages.dev)';
+// NYC Parks upcoming events. Sourced via NYC Open Data (Socrata dataset w3wp-dpdi,
+// "NYC Parks Public Events – Upcoming 14 Days") rather than the nycgovparks.org RSS
+// feed, because that host blocks CI/datacenter egress while Socrata is reachable.
+const FEED = 'https://data.cityofnewyork.us/resource/w3wp-dpdi.json?$limit=2000';
 const HEALTH_KEYWORDS =
-  /(yoga|fitness|walk|run|wellness|health|nutrition|mindful|zumba|exercise|tai chi|meditation|shape up)/i;
+  /(yoga|fitness|walk|run|wellness|health|nutrition|mindful|zumba|exercise|tai chi|meditation|shape up|aerobic|dance|swim)/i;
 
 export interface ParksOpts { fetchImpl?: typeof fetch; feedUrl?: string; }
 
@@ -16,38 +16,44 @@ function parseCoords(s?: string) {
   return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : undefined;
 }
 
+/** Combine Socrata date ("2026-07-08T00:00:00.000") + time ("7:00 am") into ISO, or undefined. */
+function toIso(startdate?: string, starttime?: string): string | undefined {
+  if (!startdate) return undefined;
+  const datePart = startdate.slice(0, 10);
+  const d = starttime ? new Date(`${datePart} ${starttime}`) : new Date(datePart);
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
+}
+
 export async function fetchNycParksEvents(opts: ParksOpts = {}): Promise<HealthEvent[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const res = await doFetch(opts.feedUrl ?? FEED, {
-    signal: AbortSignal.timeout(15000),
-    headers: { 'User-Agent': UA, Accept: 'application/json' },
-  });
+  const res = await doFetch(opts.feedUrl ?? FEED, { signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error(`NYC Parks feed HTTP ${res.status}`);
   const rows: Record<string, any>[] = await res.json();
 
-  return rows
-    .filter((r) => HEALTH_KEYWORDS.test(`${r.title} ${r.description ?? ''}`))
-    .map((r) => {
-      const start = r.starttime
-        ? new Date(`${r.startdate} ${r.starttime}`).toISOString()
-        : new Date(r.startdate).toISOString();
-      return {
-        id: `parks-${slugify(r.title)}`,
-        kind: 'event',
-        title: r.title,
-        description: r.description ?? r.title,
-        categories: ['Fitness & Wellness'],
-        address: r.location,
-        borough: 'Citywide/Online',
-        coordinates: parseCoords(r.coordinates),
-        website: r.link,
-        costNote: 'Free',
-        whoItsFor: [],
-        languagesOffered: [],
-        source: 'nyc-parks',
-        lastUpdated: new Date().toISOString().slice(0, 10),
-        start,
-        online: false,
-      } as HealthEvent;
-    });
+  const out: HealthEvent[] = [];
+  for (const r of rows) {
+    if (!HEALTH_KEYWORDS.test(`${r.title ?? ''} ${r.description ?? ''} ${r.categories ?? ''}`)) continue;
+    const start = toIso(r.startdate, r.starttime);
+    if (!start) continue; // skip unparseable dates rather than throwing the whole batch
+    const link = typeof r.link === 'object' ? r.link?.url : r.link;
+    out.push({
+      id: `parks-${slugify(r.title)}-${r.guid ?? ''}`,
+      kind: 'event',
+      title: r.title,
+      description: r.description ?? r.title,
+      categories: ['Fitness & Wellness'],
+      address: r.location ?? r.parknames,
+      borough: 'Citywide/Online',
+      coordinates: parseCoords(r.coordinates),
+      website: link,
+      costNote: 'Free',
+      whoItsFor: [],
+      languagesOffered: [],
+      source: 'nyc-parks',
+      lastUpdated: new Date().toISOString().slice(0, 10),
+      start,
+      online: false,
+    } as HealthEvent);
+  }
+  return out;
 }
