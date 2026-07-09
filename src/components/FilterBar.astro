@@ -1,0 +1,28 @@
+---
+import { CATEGORIES, BOROUGHS, WHO_ITS_FOR } from '../lib/types';
+---
+<form id="filterBar" class="card" style="display:grid;gap:10px" aria-label="Filter resources">
+  <div style="display:flex;gap:8px">
+    <label for="q" class="visually-hidden">Search</label>
+    <input id="q" name="q" placeholder="Search resources…" style="flex:1;padding:12px;border:2px solid var(--border);border-radius:8px" />
+    <button type="button" id="nearMe" class="btn btn-teal">📍 Near me</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px">
+    <label>Category
+      <select id="category" multiple size="1" style="max-width:180px">
+        {CATEGORIES.map((c) => <option value={c}>{c}</option>)}
+      </select>
+    </label>
+    <label>Borough
+      <select id="borough" multiple size="1" style="max-width:150px">
+        {BOROUGHS.map((b) => <option value={b}>{b}</option>)}
+      </select>
+    </label>
+    <label>Who it's for
+      <select id="for" multiple size="1" style="max-width:160px">
+        {WHO_ITS_FOR.map((w) => <option value={w}>{w}</option>)}
+      </select>
+    </label>
+    <button type="button" id="viewToggle" class="btn btn-teal">Map view</button>
+  </div>
+</form>

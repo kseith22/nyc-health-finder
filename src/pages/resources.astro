@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import FilterBar from '../components/FilterBar.astro';
+import ResultsMap from '../components/ResultsMap.astro';
+---
+<Base title="Find resources">
+  <div class="container" style="padding:24px 1rem">
+    <h1>Find free health resources</h1>
+    <FilterBar />
+    <ResultsMap />
+    <div id="results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:14px"></div>
+  </div>
+  <script>
+    import '../scripts/resources-island.ts';
+  </script>
+</Base>

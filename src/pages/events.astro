@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import EventCard from '../components/EventCard.astro';
+import { getAllEvents } from '../data/index';
+
+const events = (await getAllEvents())
+  .filter((e) => new Date(e.start) >= new Date(Date.now() - 864e5))
+  .sort((a, b) => +new Date(a.start) - +new Date(b.start));
+---
+<Base title="Upcoming events">
+  <div class="container" style="padding:24px 1rem">
+    <h1>Upcoming free events</h1>
+    {events.length === 0 ? <p>No upcoming events listed yet.</p> : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
+        {events.map((e) => <EventCard e={e} />)}
+      </div>
+    )}
+  </div>
+</Base>
