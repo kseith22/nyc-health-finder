@@ -36,6 +36,7 @@ export async function fetchNycOpenData(
     const url = `${BASE}/${src.dataset}.json?$limit=${limit}`;
     const res = await doFetch(url, {
       headers: opts.appToken ? { 'X-App-Token': opts.appToken } : {},
+      signal: AbortSignal.timeout(15000),
     });
     if (!res.ok) throw new Error(`Socrata ${src.dataset} HTTP ${res.status}`);
     const rows: Record<string, any>[] = await res.json();

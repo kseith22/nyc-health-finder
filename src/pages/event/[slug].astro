@@ -16,7 +16,7 @@ const when = new Date(e.start).toLocaleString('en-US', {
     <p><a href="/events">← Back to events</a></p>
     <span class="tag">{e.categories.join(' · ')}</span>
     <h1>{e.title}</h1>
-    <p style="font-weight:700;color:var(--coral)">{when}</p>
+    <p style="font-weight:700;color:var(--coral-ink)">{when}</p>
     <p>{e.description}</p>
     <p><strong>Where:</strong> {e.online ? 'Online' : `${e.address ?? ''}, ${e.borough}`}</p>
     {e.registrationRequired && e.registrationUrl && (

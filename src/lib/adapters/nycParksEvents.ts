@@ -15,7 +15,7 @@ function parseCoords(s?: string) {
 
 export async function fetchNycParksEvents(opts: ParksOpts = {}): Promise<HealthEvent[]> {
   const doFetch = opts.fetchImpl ?? fetch;
-  const res = await doFetch(opts.feedUrl ?? FEED);
+  const res = await doFetch(opts.feedUrl ?? FEED, { signal: AbortSignal.timeout(15000) });
   if (!res.ok) throw new Error(`NYC Parks feed HTTP ${res.status}`);
   const rows: Record<string, any>[] = await res.json();
 

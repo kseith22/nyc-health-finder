@@ -1,4 +1,4 @@
-import type { Borough, Entry } from './types';
+import type { Borough } from './types';
 
 export function slugify(s: string): string {
   return s.toLowerCase().normalize('NFKD')
@@ -6,8 +6,13 @@ export function slugify(s: string): string {
     .trim().replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 
-export function dedupeKey(e: Pick<Entry, 'title'> & { zip?: string }): string {
-  return `${slugify(e.title)}|${e.zip ?? ''}`;
+export function dedupeKey(
+  e: { title: string; zip?: string; address?: string; coordinates?: { lat: number; lng: number } },
+): string {
+  const loc = e.zip
+    || e.address
+    || (e.coordinates ? `${e.coordinates.lat.toFixed(4)},${e.coordinates.lng.toFixed(4)}` : '');
+  return `${slugify(e.title)}|${loc}`;
 }
 
 const BOROUGH_MAP: Record<string, Borough> = {

@@ -2,6 +2,7 @@ import * as L from 'leaflet';
 import type { Resource, HealthEvent } from '../lib/types';
 import { applyFilters, filtersToParams, paramsToFilters, type Filters } from '../lib/search';
 import { sortByDistance } from '../lib/geo';
+import { escapeHtml } from '../lib/escapeHtml';
 
 type Data = { resources: Resource[]; events: HealthEvent[] };
 
@@ -53,9 +54,9 @@ async function init() {
     // list
     listEl.innerHTML = items.length
       ? items.map((r) => `<a class="card" href="/resource/${r.id}" style="display:block;text-decoration:none;color:inherit">
-          <div style="font-size:.66rem;font-weight:800;color:var(--coral-ink);text-transform:uppercase">${r.costNote ?? 'Free'} · ${r.categories[0]}</div>
-          <div style="font-weight:800;margin:4px 0">${r.title}</div>
-          <div style="font-size:.82rem;color:var(--ink-soft)">${r.borough}${origin && r.coordinates ? '' : ''}</div>
+          <div style="font-size:.66rem;font-weight:800;color:var(--coral-ink);text-transform:uppercase">${escapeHtml(r.costNote ?? 'Free')} · ${escapeHtml(r.categories[0])}</div>
+          <div style="font-weight:800;margin:4px 0">${escapeHtml(r.title)}</div>
+          <div style="font-size:.82rem;color:var(--ink-soft)">${escapeHtml(r.borough)}${origin && r.coordinates ? '' : ''}</div>
         </a>`).join('')
       : `<p>No matches. Try removing a filter.</p>`;
     listEl.setAttribute('aria-live', 'polite');
@@ -66,7 +67,7 @@ async function init() {
       for (const r of items) {
         if (!r.coordinates) continue;
         L.marker([r.coordinates.lat, r.coordinates.lng])
-          .bindPopup(`<strong>${r.title}</strong><br><a href="/resource/${r.id}">Details</a>`)
+          .bindPopup(`<strong>${escapeHtml(r.title)}</strong><br><a href="/resource/${r.id}">Details</a>`)
           .addTo(markers);
       }
     }
@@ -93,6 +94,8 @@ async function init() {
       origin = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       near.textContent = '📍 Sorted by nearest';
       render();
+    }, () => {
+      near.textContent = '📍 Location unavailable';
     });
   });
 
