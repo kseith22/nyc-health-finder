@@ -5,6 +5,7 @@ Live at **https://nychealthfinder.org** · repo auto-deploys to Cloudflare Pages
 ## Immediate / follow-up
 - [ ] **Watch the first nightly cron run** (`.github/workflows/nightly.yml`, 07:00 UTC) to confirm it builds + deploys cleanly on schedule (all manual pushes have deployed fine).
 - [ ] Check back in a few days that Google's "Discovered pages" count is climbing toward ~2,416 in Search Console → Sitemaps.
+- [ ] **Google indexing (parked, normal for a new site):** as of 2026-07-15, 4 pages indexed, 17 "Crawled – currently not indexed." This is expected for a ~1-week-old domain — revisit in 2–4 weeks. To help: request indexing for the ~14 key pages (home, 12 category landing pages, About) via URL Inspection; earn a few backlinks / share the site. Optional code follow-up below.
 
 ## Next up
 - [ ] **Fill the remaining thin categories** — federal/NYC feeds don't cover these; they have only curated anchors: **Insurance & Benefits Navigation** (~4), **Housing & Environmental Health** (~3), **Dental & Vision** (~3), **Immigrant Health** (~3). Options: more curated entries, or find NYC Open Data datasets (e.g. Financial Empowerment Centers, HRA/benefits sites, WIC vendors, dental clinics).
@@ -16,6 +17,7 @@ Live at **https://nychealthfinder.org** · repo auto-deploys to Cloudflare Pages
 - [ ] Add a NYC Open Data app token as a GitHub secret `NYC_OPEN_DATA_TOKEN` (raises rate limits; site builds fine without it).
 - [ ] Optional: turn off Cloudflare's "Managed robots.txt" if you want our exact robots.txt served (it currently allows search crawlers but drops our `Sitemap:` line — not needed once the sitemap is submitted to Search Console).
 - [ ] Optional polish: add an OG image for nicer social-share cards.
+- [ ] Optional (SEO): make resource/event detail pages more distinct — feed-generated pages currently share boilerplate descriptions (e.g. all HRSA centers), which contributes to "Crawled – currently not indexed." Vary the per-page description in the adapters/templates to improve indexing.
 
 ## Done
 - **MVP:** Astro site, 12 categories, search/filter/map (Leaflet) + "Near me", nightly rebuild, WCAG AA, mobile-first.
