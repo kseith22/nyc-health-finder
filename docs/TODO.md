@@ -17,6 +17,7 @@ Live at **https://nychealthfinder.org** · repo auto-deploys to Cloudflare Pages
 - [ ] Add a NYC Open Data app token as a GitHub secret `NYC_OPEN_DATA_TOKEN` (raises rate limits; site builds fine without it).
 - [ ] Optional: turn off Cloudflare's "Managed robots.txt" if you want our exact robots.txt served (it currently allows search crawlers but drops our `Sitemap:` line — not needed once the sitemap is submitted to Search Console).
 - [ ] Optional polish: add an OG image for nicer social-share cards.
+- [ ] Optional (email): give `contact@`/`support@` a real display name. Aliases can't carry their own display name (they send with the bare address; only `info@`/primary shows the mailbox display name). To fix: convert them from aliases into free **shared mailboxes**, each with its own display name + "Send As" for Kevin's account (remove the alias from info@ first, create shared mailbox with that address, grant Full Access + Send As; optionally forward into info@). Parked 2026-07-15.
 - [ ] Optional (SEO): make resource/event detail pages more distinct — feed-generated pages currently share boilerplate descriptions (e.g. all HRSA centers), which contributes to "Crawled – currently not indexed." Vary the per-page description in the adapters/templates to improve indexing.
 
 ## Done
