@@ -8,7 +8,7 @@ Live at **https://nychealthfinder.org** · repo auto-deploys to Cloudflare Pages
 
 ## Next up
 - [ ] **Fill the remaining thin categories** — federal/NYC feeds don't cover these; they have only curated anchors: **Insurance & Benefits Navigation** (~4), **Housing & Environmental Health** (~3), **Dental & Vision** (~3), **Immigrant Health** (~3). Options: more curated entries, or find NYC Open Data datasets (e.g. Financial Empowerment Centers, HRA/benefits sites, WIC vendors, dental clinics).
-- [ ] **File the free SAMHSA API access request** at findtreatment.gov/api-request-form to stay compliant with their terms (endpoint works without it today).
+- [ ] **SAMHSA API access (optional; feed works without it).** The form at findtreatment.gov/api-request-form requires a *static* server IP, which doesn't fit our GitHub Actions build (rotating IPs). Plan: email **FindTreatment@samhsa.hhs.gov** instead, describing the daily CI fetch and asking how to register a dynamic-IP/CI client (we already send a descriptive User-Agent). A ready-to-send draft was prepared 2026-07-08. Status: [ ] not yet sent. If they require the form, fill it with the field values noted for the project and reference the email about dynamic IPs.
 
 ## Later (Phase 2)
 - [ ] "Submit a resource" community form + moderation.
